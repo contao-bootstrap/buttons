@@ -94,8 +94,10 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['bootstrap_buttons'] = array
                         (
                             'inputType' => 'text',
                             'exclude'   => true,
-                            'eval'      => array('style'       => 'width: 130px',
-                                                 'placeholder' => $GLOBALS['TL_LANG']['tl_module']['bootstrap_buttons_attributes_value']
+                            'eval'      => array
+                            (
+                                'style'       => 'width: 130px',
+                                'placeholder' => $GLOBALS['TL_LANG']['tl_module']['bootstrap_buttons_attributes_value']
                             ),
                         ),
                     ),
