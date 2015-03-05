@@ -241,7 +241,7 @@ class Factory
     /**
      * Enable the toolbar.
      *
-     * @param mixed $root   Current root element.
+     * @param mixed $root Current root element.
      *
      * @return Toolbar
      */
