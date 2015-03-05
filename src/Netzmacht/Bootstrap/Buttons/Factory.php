@@ -242,17 +242,16 @@ class Factory
      * Enable the toolbar.
      *
      * @param mixed $root   Current root element.
-     * @param array $button Button definition.
      *
      * @return Toolbar
      */
-    protected static function enableToolbar($root, $button)
+    protected static function enableToolbar($root)
     {
         if (!$root instanceof Toolbar) {
             $group = $root;
-            $root  = static::createToolbar($button['attributes'], true);
+            $root  = static::createToolbar(array(), true);
 
-            if ($group instanceof Group) {
+            if ($group instanceof Group && $group->getChildren()) {
                 $root->addChild($group);
             }
         }
@@ -352,7 +351,7 @@ class Factory
      */
     protected static function createNewGroup(&$root, $button, &$dropdown)
     {
-        $root = self::enableToolbar($root, $button);
+        $root = self::enableToolbar($root);
 
         if ($dropdown !== false) {
             $dropdown = false;
