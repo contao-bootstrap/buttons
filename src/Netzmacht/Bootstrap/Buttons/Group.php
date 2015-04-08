@@ -20,12 +20,18 @@ class Group extends ChildAware
      * Construct.
      *
      * @param array $attributes Html attributes.
+     * @param bool  $vertical   If true a vertical button group is created.
      */
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = array(), $vertical = false)
     {
         parent::__construct($attributes);
 
-        $this->addClass('btn-group');
+        if ($vertical) {
+            $this->addClass('btn-group-vertical');
+        } else {
+            $this->addClass('btn-group');
+        }
+
         $this->setAttribute('role', 'group');
     }
 }

@@ -48,7 +48,7 @@ class Factory
                 $dropdown = false;
             }
 
-            if ($button['type'] == 'group') {
+            if (in_array($button['type'], array('group', 'vgroup'))) {
                 // create new group
 
                 $group = self::createNewGroup($root, $button, $dropdown);
@@ -101,12 +101,13 @@ class Factory
      *
      * @param array $attributes   Additional html attributes.
      * @param bool  $fromFieldset Set true if attributes comes from fieldset definitions have to be transformed.
+     * @param bool  $vertical     If true a vertical group is created.
      *
      * @return Group
      */
-    public static function createGroup(array $attributes = array(), $fromFieldset = false)
+    public static function createGroup(array $attributes = array(), $fromFieldset = false, $vertical = false)
     {
-        $group = new Group();
+        $group = new Group(array(), $vertical);
         static::applyAttributes($group, $attributes, $fromFieldset);
 
         return $group;
@@ -317,7 +318,7 @@ class Factory
      */
     protected static function isInvalidDefinition($button)
     {
-        return $button['label'] == '' && $button['type'] != 'group' && $button['type'] != 'dropdown';
+        return $button['label'] == '' && !in_array($button['type'], array('group', 'vgroup', 'dropdown'));
     }
 
     /**
@@ -357,7 +358,7 @@ class Factory
             $dropdown = false;
         }
 
-        $group = static::createGroup($button['attributes'], true);
+        $group = static::createGroup($button['attributes'], true, ($button['type'] === 'vgroup'));
         $root->addChild($group);
 
         return $group;
