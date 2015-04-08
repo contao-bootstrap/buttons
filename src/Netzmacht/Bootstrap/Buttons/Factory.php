@@ -33,6 +33,7 @@ class Factory
 
         /** @var bool|Dropdown $dropdown */
         $dropdown = false;
+        $first    = true;
 
         foreach ($definition as $button) {
             // dont add empty items
@@ -50,8 +51,7 @@ class Factory
 
             if (in_array($button['type'], array('group', 'vgroup'))) {
                 // create new group
-
-                $group = self::createNewGroup($root, $button, $dropdown);
+                $group = self::createNewGroup($root, $button, $dropdown, !$first);
             } elseif ($button['type'] == 'dropdown') {
                 // create dropdown
 
@@ -71,6 +71,8 @@ class Factory
                 $child = static::createButton($button['label'], $button['url'], $button['attributes'], true);
                 $group->addChild($child);
             }
+
+            $first = false;
         }
 
         return $root;
@@ -344,22 +346,30 @@ class Factory
     /**
      * Create a new group element.
      *
-     * @param mixed         $root     Current root.
-     * @param array         $button   Button definition.
-     * @param Dropdown|bool $dropdown Dropdown element.
+     * @param mixed         $root      Current root.
+     * @param array         $button    Button definition.
+     * @param Dropdown|bool $dropdown  Dropdown element.
+     * @param bool          $addToRoot If rue the created group is added to the root.
      *
-     * @return \Netzmacht\Bootstrap\Buttons\Group
+     * @return Group
      */
-    protected static function createNewGroup(&$root, $button, &$dropdown)
+    protected static function createNewGroup(&$root, $button, &$dropdown, $addToRoot = true)
     {
-        $root = self::enableToolbar($root);
+        if ($addToRoot) {
+            $root = self::enableToolbar($root);
+        }
 
         if ($dropdown !== false) {
             $dropdown = false;
         }
 
         $group = static::createGroup($button['attributes'], true, ($button['type'] === 'vgroup'));
-        $root->addChild($group);
+
+        if ($addToRoot) {
+            $root->addChild($group);
+        } else {
+            $root = $group;
+        }
 
         return $group;
     }
