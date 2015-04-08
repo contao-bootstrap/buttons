@@ -33,6 +33,7 @@ class Factory
 
         /** @var bool|Dropdown $dropdown */
         $dropdown = false;
+        $first    = true;
 
         foreach ($definition as $button) {
             // dont add empty items
@@ -48,10 +49,9 @@ class Factory
                 $dropdown = false;
             }
 
-            if ($button['type'] == 'group') {
+            if (in_array($button['type'], array('group', 'vgroup'))) {
                 // create new group
-
-                $group = self::createNewGroup($root, $button, $dropdown);
+                $group = self::createNewGroup($root, $button, $dropdown, !$first);
             } elseif ($button['type'] == 'dropdown') {
                 // create dropdown
 
@@ -71,6 +71,8 @@ class Factory
                 $child = static::createButton($button['label'], $button['url'], $button['attributes'], true);
                 $group->addChild($child);
             }
+
+            $first = false;
         }
 
         return $root;
@@ -101,12 +103,13 @@ class Factory
      *
      * @param array $attributes   Additional html attributes.
      * @param bool  $fromFieldset Set true if attributes comes from fieldset definitions have to be transformed.
+     * @param bool  $vertical     If true a vertical group is created.
      *
      * @return Group
      */
-    public static function createGroup(array $attributes = array(), $fromFieldset = false)
+    public static function createGroup(array $attributes = array(), $fromFieldset = false, $vertical = false)
     {
-        $group = new Group();
+        $group = new Group(array(), $vertical);
         static::applyAttributes($group, $attributes, $fromFieldset);
 
         return $group;
@@ -241,18 +244,17 @@ class Factory
     /**
      * Enable the toolbar.
      *
-     * @param mixed $root   Current root element.
-     * @param array $button Button definition.
+     * @param mixed $root Current root element.
      *
      * @return Toolbar
      */
-    protected static function enableToolbar($root, $button)
+    protected static function enableToolbar($root)
     {
         if (!$root instanceof Toolbar) {
             $group = $root;
-            $root  = static::createToolbar($button['attributes'], true);
+            $root  = static::createToolbar(array(), true);
 
-            if ($group instanceof Group) {
+            if ($group instanceof Group && $group->getChildren()) {
                 $root->addChild($group);
             }
         }
@@ -318,7 +320,7 @@ class Factory
      */
     protected static function isInvalidDefinition($button)
     {
-        return $button['label'] == '' && $button['type'] != 'group' && $button['type'] != 'dropdown';
+        return $button['label'] == '' && !in_array($button['type'], array('group', 'vgroup', 'dropdown'));
     }
 
     /**
@@ -344,22 +346,30 @@ class Factory
     /**
      * Create a new group element.
      *
-     * @param mixed         $root     Current root.
-     * @param array         $button   Button definition.
-     * @param Dropdown|bool $dropdown Dropdown element.
+     * @param mixed         $root      Current root.
+     * @param array         $button    Button definition.
+     * @param Dropdown|bool $dropdown  Dropdown element.
+     * @param bool          $addToRoot If rue the created group is added to the root.
      *
-     * @return \Netzmacht\Bootstrap\Buttons\Group
+     * @return Group
      */
-    protected static function createNewGroup(&$root, $button, &$dropdown)
+    protected static function createNewGroup(&$root, $button, &$dropdown, $addToRoot = true)
     {
-        $root = self::enableToolbar($root, $button);
+        if ($addToRoot) {
+            $root = self::enableToolbar($root);
+        }
 
         if ($dropdown !== false) {
             $dropdown = false;
         }
 
-        $group = static::createGroup($button['attributes'], true);
-        $root->addChild($group);
+        $group = static::createGroup($button['attributes'], true, ($button['type'] === 'vgroup'));
+
+        if ($addToRoot) {
+            $root->addChild($group);
+        } else {
+            $root = $group;
+        }
 
         return $group;
     }

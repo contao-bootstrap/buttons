@@ -17,3 +17,4 @@ $GLOBALS['TL_LANG']['tl_content']['bootstrap_buttons_types']['dropdown'] = 'Drop
 $GLOBALS['TL_LANG']['tl_content']['bootstrap_buttons_types']['child']    = 'Dropdown link';
 $GLOBALS['TL_LANG']['tl_content']['bootstrap_buttons_types']['header']   = 'Dropdown section headline';
 $GLOBALS['TL_LANG']['tl_content']['bootstrap_buttons_types']['group']    = 'Group';
+$GLOBALS['TL_LANG']['tl_content']['bootstrap_buttons_types']['vgroup']   = 'Group (vertical)';
