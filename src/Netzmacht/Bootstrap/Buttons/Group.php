@@ -24,6 +24,8 @@ class Group extends ChildAware
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
+
         $this->addClass('btn-group');
+        $this->setAttribute('role', 'group');
     }
 }
