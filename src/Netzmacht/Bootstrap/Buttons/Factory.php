@@ -334,7 +334,7 @@ class Factory
     {
         if (isset($button['button']) && $button['button'] == 'link') {
             if (substr($button['value'], 0, 7) == 'mailto:') {
-                $button['value'] = \String::encodeEmail($button['value']);
+                $button['value'] = \StringUtil::encodeEmail($button['value']);
             } else {
                 $button['value'] = ampersand($button['value']);
             }
@@ -359,6 +359,8 @@ class Factory
             $root = self::enableToolbar($root);
         }
 
+        
+        
         if ($dropdown !== false) {
             $dropdown = false;
         }
