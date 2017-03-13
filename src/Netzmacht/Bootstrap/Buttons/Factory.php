@@ -328,13 +328,17 @@ class Factory
      *
      * @param array $button Button definition.
      *
-     * @return button
+     * @return array
      */
     protected static function encodeValue($button)
     {
         if (isset($button['button']) && $button['button'] == 'link') {
             if (substr($button['value'], 0, 7) == 'mailto:') {
-                $button['value'] = \String::encodeEmail($button['value']);
+                if (version_compare(VERSION . '.' . BUILD, '3.5.5', '>=')) {
+                    $button['value'] = \StringUtil::encodeEmail($button['value']);
+                } else {
+                    $button['value'] = \String::encodeEmail($button['value']);
+                }
             } else {
                 $button['value'] = ampersand($button['value']);
             }

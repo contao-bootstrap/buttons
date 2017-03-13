@@ -82,7 +82,12 @@ class ButtonElement extends \ContentElement
     protected function setHref(Attributes $attributes)
     {
         if (substr($this->url, 0, 7) == 'mailto:') {
-            $attributes->setAttribute('href', \String::encodeEmail($this->url));
+            if (version_compare(VERSION . '.' . BUILD, '3.5.5', '>=')) {
+                $url = \StringUtil::encodeEmail($this->url);
+            } else {
+                $url = \String::encodeEmail($this->url);
+            }
+            $attributes->setAttribute('href', $url);
         } else {
             $attributes->setAttribute('href', ampersand($this->url));
         }
